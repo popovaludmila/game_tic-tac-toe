@@ -8,12 +8,13 @@ const cells = document.querySelectorAll('.cell');
 let gameRunning = false;
 let gameOver = false;
 let boardState = Array(9).fill("");
-let currentPlayer = "";
-
 const players = {
   x: "X",
   o: "O"
 };
+let currentPlayer = players.x;
+
+
 
 const winCombinations = [
   [0, 1, 2],
@@ -27,15 +28,26 @@ const winCombinations = [
 ];
 
 function initializeGame() {
-  cells.forEach(cell => {
+  if(localStorage.getItem("board") && localStorage.getItem("player")) {
+      boardState = JSON.parse(localStorage.getItem("board"));
+      currentPlayer = JSON.parse(localStorage.getItem("player"));
+  };
+
+  cells.forEach((cell, num) => {
+    cell.textContent = boardState[num];
     cell.addEventListener('click', clickOnCell);
-  })
+  });
 
   restartBtn.addEventListener('click', restartGame);
+
+  gameRunning = true;
+  winnerText.textContent = "";
+  turnText.textContent = `Ход игрока: ${currentPlayer}`;
 }
 
 // Начальное состояние игры
 function startGame() {
+  boardState = Array(9).fill("");
   gameRunning = true;
   cells.forEach(cell => cell.textContent = "");
   winnerText.textContent = "";
@@ -64,6 +76,8 @@ function clickOnCell() {
   this.style.cursor = "not-allowed";
   currentPlayer = (currentPlayer === players.x) ? players.o : players.x;
   turnText.textContent = `Ход игрока: ${currentPlayer}`;
+  localStorage.setItem('board', JSON.stringify(boardState));
+  localStorage.setItem('player', JSON.stringify(currentPlayer));
 };
 
 //Проверка ничьи
@@ -104,8 +118,9 @@ function checkGameOver() {
 
 //Конец игры
 function finishGame() {
-  gameRunning = true;
+  gameRunning = false;
   turnText.textContent = "";
+  localStorage.clear();
 };
 
 function restartGame() {
@@ -116,34 +131,4 @@ function restartGame() {
 // Когда страница будет полностью загружена, вызывается функция initializeGame
 window.addEventListener('load', () => {
   initializeGame();
-  startGame();
 });
-
-// Создаем ячейки на игровом поле
-// for (let i = 0; i < 9; i++) {
-//   const cell = document.createElement("div");
-//   cell.classList.add("cell");
-//   cells.push(cell);
-//   board.appendChild(cell);
-
-//   // Обработчик клика по ячейке
-//   cell.addEventListener("click", () => {
-//     if (cell.textContent === "" && currentPlayer === "X" && !gameOver) {
-//       cell.textContent = currentPlayer;
-//       cell.style.cursor = "not-allowed";
-
-//       if (checkWin(currentPlayer)) {
-//         alert("Игрок " + currentPlayer + " победил!");
-//         gameOver = true;
-//       } else if (checkDraw()) {
-//         alert("Ничья!");
-//         gameOver = true;
-//       } else {
-//         currentPlayer = "O";
-//         setTimeout(makeBotMove, 500);
-//       }
-//     }
-//   });
-// }
-
-
