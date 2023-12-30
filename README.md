@@ -1,6 +1,6 @@
 <h2>Игра «крестики-нолики», в которую можно было бы играть в реальном времени, но на одном компьютере.</h2>
 
-game-tic-tac-toe-three.vercel.app
+game-tic-tac-n2wh5dwe6-popovaludmila.vercel.app
 
 <ul>
 
